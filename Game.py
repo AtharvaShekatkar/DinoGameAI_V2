@@ -112,5 +112,3 @@ def game():
         clock.tick(60)
 
         pygame.display.update()
-
-game()
