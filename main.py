@@ -1,3 +1,5 @@
-from Game import game
+from Game import Game
 
-game()
+game = Game()
+
+game.play_manual()
