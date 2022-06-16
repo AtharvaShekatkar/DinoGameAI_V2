@@ -27,14 +27,15 @@ class DQNAgent:
     
     def create_model(self):
         model = tf.keras.models.Sequential()
-        model.add(tf.keras.layers.Input(shape=(3,)))
-        model.add(tf.keras.layers.Dense(4, activation='relu'))
-        model.add(tf.keras.layers.Dropout(0.2))
+        model.add(tf.keras.layers.Input(shape=(5,)))
+        # model.add(tf.keras.layers.Dropout(0.2))
+        # model.add(tf.keras.layers.Dense(4, activation='relu'))
+        # model.add(tf.keras.layers.Dropout(0.2))
         model.add(tf.keras.layers.Dense(3))
 
         model.compile(
             optimizer='adam',
-            loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+            loss=tf.keras.losses.MeanSquaredError(),
             metrics=['accuracy']
         )
 
@@ -43,12 +44,14 @@ class DQNAgent:
 
     # Update the memory store
     def update_replay_memory(self, transition):
+        # if len(self.replay_memory) > 50_000:
+        #     self.replay_memory.clear()
         self.replay_memory.append(transition)
     
 
     # Get the q values for the given state
     def get_qs(self, state):
-        return self.model.predict(np.array(state).reshape(-1, *state.shape))[0]
+        return self.model.predict(np.array([state]))[0]
     
 
     # train the neural networks
@@ -92,7 +95,7 @@ class DQNAgent:
 
         
         # Fit on all samples as one batch
-        self.model.fit(np.array(X), np.array(y), batch_size=MINIBATCH_SIZE, shuffle=False)
+        self.model.fit(np.array(X), np.array(y), batch_size=MINIBATCH_SIZE, shuffle=False, verbose=0)
 
         # Update target network every episode
         if terminal_state:
@@ -100,5 +103,7 @@ class DQNAgent:
         
         # If counter crosses threshold, update target network with the weights of the main network
         if self.target_update_counter > UPDATE_TARGET_THRESH:
+            print(self.target_update_counter)
             self.target_model.set_weights(self.model.get_weights())
             self.target_update_counter = 0
+            print(self.target_update_counter)

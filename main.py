@@ -1,5 +1,6 @@
 from Game import Game
+from Globals import EPSILON_INIT
 
-game = Game()
+game = Game(EPSILON_INIT)
 
-game.play_manual()
+game.play_auto()

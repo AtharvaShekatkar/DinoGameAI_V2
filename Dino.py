@@ -1,6 +1,7 @@
 #Creating the Dino class
 import pygame
 from LoadImages import RUNNING, JUMPING, DUCKING
+import numpy as np
 from DQNAgent import DQNAgent
 
 class Dino(DQNAgent):
@@ -64,7 +65,33 @@ class Dino(DQNAgent):
             self.dino_jump = False
             self.dino_duck = False
     
+    def update_auto(self, move):
+        if self.dino_duck == True:
+            self.duck()
+        
+        if self.dino_jump == True:
+            self.jump()
+        
+        if self.dino_run == True:
+            self.run()
 
+        if self.step_index >= 20:
+            self.step_index = 0
+        
+        if move == 0 and not self.dino_jump:
+            self.dino_jump = True
+            self.dino_run = False
+            self.dino_duck = False
+
+        elif move == 1 and not self.dino_jump:
+            self.dino_duck = True
+            self.dino_run = False
+            self.dino_jump = False
+        
+        elif not(self.dino_jump or move == 1):
+            self.dino_run = True
+            self.dino_jump = False
+            self.dino_duck = False
 
     def duck(self) -> None:
         self.image = self.duck_img[self.step_index // 10]
