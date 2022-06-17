@@ -110,7 +110,7 @@ class Game:
         self.SCREEN.blit(text, textRect)
     
     def create_obstacle(self):
-        obstacle_prob = random.randint(0, 100)
+        obstacle_prob = random.randint(0, 10)
         if obstacle_prob == 0:
             self.obstacles.append(SmallCactus(SMALL_CACTUS))
         elif obstacle_prob == 1:
@@ -135,7 +135,7 @@ class Game:
 
         self.clock.tick(60)
 
-        pygame.display.update()
+        # pygame.display.update()
 
     def play_manual(self):
         
@@ -165,6 +165,7 @@ class Game:
 
 
     def play_auto(self):
+        points_label = 0
         for episode in tqdm(range(1, NUM_EPISODES + 1), ascii=True, unit='episodes'):
             episode_reward = 0
             step = 1
@@ -195,7 +196,7 @@ class Game:
                     if num == 0:
                         # print("yes")
                         action = num
-                    elif num <= 5:
+                    elif num <= 3:
                         action = 1
                     else:
                         action = 2
@@ -211,17 +212,22 @@ class Game:
                     next_state = self.get_state()
                     if self.dino.dino_rect.x > obstacle.rect.x + obstacle.rect.width:
                         reward = 3
+                    
+                    if action == 0 and obstacle.rect.x > SCREEN_WIDTH // 2:
+                        reward = -1
+                    
                     if self.dino.dino_rect.colliderect(obstacle.rect):
                         self.dino.score = self.points
                         # pygame.quit()
                         self.obstacles.pop()
+                        points_label = self.points
                         self.reset()
                         reward = -10
-                        print("Game over!")
+                        # print("Game over!")
                         self.run = False
                         break
-                if reward != 0:
-                    print(reward > 0)
+                # if reward != 0:
+                #     print(reward > 0)
 
                 episode_reward += reward
                 
@@ -241,12 +247,16 @@ class Game:
             
 
             self.ep_rewards.append(episode_reward)
-            if episode % 100 == 0:
-                self.dino.model.save(f'models/Episode_{episode}_model.model')
+            if episode % 50 == 0:
+                self.dino.model.save(f'models/Episode_{episode}_Points_{points_label}_model.model')
             
 
             if self.epsilon > MIN_EPSILON:
                 self.epsilon *= EPSILON_DECAY
-                self.epsilon = max(MIN_EPSILON, self.epsilon)
+                if self.epsilon < MIN_EPSILON:
+                    self.epsilon = 0
+                    # print(self.epsilon)
+                else:
+                    self.epsilon = max(MIN_EPSILON, self.epsilon)
                 # print(self.epsilon)
                 # print((self.dino.replay_memory))

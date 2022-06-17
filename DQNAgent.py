@@ -51,7 +51,7 @@ class DQNAgent:
 
     # Get the q values for the given state
     def get_qs(self, state):
-        return self.model.predict(np.array([state]))[0]
+        return self.model(np.array([state]), training=False)[0]
     
 
     # train the neural networks
@@ -65,12 +65,12 @@ class DQNAgent:
 
         # Get current states for minibatch and then query the NN for Q values
         current_states = np.array([transition[0] for transition in minibatch])
-        current_qs_list = self.model.predict(current_states)
+        current_qs_list = self.model(current_states, training=False).numpy()
 
         # Get future states for minibatch and then query the target NN for Q values
 
         new_current_states = np.array([transition[3] for transition in minibatch])
-        future_qs_list = self.target_model.predict(new_current_states)
+        future_qs_list = self.target_model(new_current_states, training=False).numpy()
 
         X = []
         y = []
@@ -103,7 +103,7 @@ class DQNAgent:
         
         # If counter crosses threshold, update target network with the weights of the main network
         if self.target_update_counter > UPDATE_TARGET_THRESH:
-            print(self.target_update_counter)
+            # print(self.target_update_counter)
             self.target_model.set_weights(self.model.get_weights())
             self.target_update_counter = 0
-            print(self.target_update_counter)
+            # print(self.target_update_counter)
