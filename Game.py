@@ -171,7 +171,7 @@ class Game:
                     print("Game over!")
                     return
 
-            self.update_game(user_input=user_input)
+            self.update_game(user_input=user_input, moves=2)
 
 
     def play_auto(self):
