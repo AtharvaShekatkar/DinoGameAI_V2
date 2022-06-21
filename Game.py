@@ -47,7 +47,8 @@ class Game:
         self.game_speed = INIT_GAME_SPEED
         old_dino = self.dino
         self.dino = Dino()
-        self.dino.replay_memory = old_dino.replay_memory
+        self.dino.init_replay_memory = old_dino.init_replay_memory
+        self.dino.late_replay_memory = old_dino.late_replay_memory
         self.dino.target_update_counter = old_dino.target_update_counter
         self.dino.model.set_weights(old_dino.model.get_weights())
         self.dino.target_model.set_weights(old_dino.target_model.get_weights())
@@ -110,12 +111,21 @@ class Game:
         self.SCREEN.blit(text, textRect)
     
     def create_obstacle(self):
+        # bird_prob = random.randint(0, 15)
+        # cactus_prob = random.randint(0, 10)
+        # if bird_prob == 0:
+        #     self.obstacles.append(Bird(BIRD))
+        # elif cactus_prob == 0:
+        #     self.obstacles.append(SmallCactus(SMALL_CACTUS))
+        # elif cactus_prob == 1:
+        #     self.obstacles.append(LargeCactus(LARGE_CACTUS))
+
         obstacle_prob = random.randint(0, 10)
         if obstacle_prob == 0:
             self.obstacles.append(SmallCactus(SMALL_CACTUS))
         elif obstacle_prob == 1:
             self.obstacles.append(LargeCactus(LARGE_CACTUS))
-        elif obstacle_prob == 2:
+        elif obstacle_prob == 2 and self.points > 200:
             self.obstacles.append(Bird(BIRD))
     
     def update_game(self, moves, user_input=None):

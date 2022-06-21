@@ -19,7 +19,8 @@ class DQNAgent:
         self.target_model.set_weights(self.model.get_weights())
 
         # memory that is kept to learn from
-        self.replay_memory = deque(maxlen=REPLAY_MEMORY_SIZE)
+        self.init_replay_memory = deque(maxlen=INIT_REPLAY_MEM_SIZE)
+        self.late_replay_memory = deque(maxlen=REPLAY_MEMORY_SIZE)
 
         # counter for updating the target model
         self.target_update_counter = 0
@@ -46,7 +47,10 @@ class DQNAgent:
     def update_replay_memory(self, transition):
         # if len(self.replay_memory) > 50_000:
         #     self.replay_memory.clear()
-        self.replay_memory.append(transition)
+        if len(self.init_replay_memory) < INIT_REPLAY_MEM_SIZE:
+            self.init_replay_memory.append(transition)
+        else:
+            self.late_replay_memory.append(transition)
     
 
     # Get the q values for the given state
@@ -57,11 +61,13 @@ class DQNAgent:
     # train the neural networks
     def train(self, terminal_state, step):
         # Start training only if a certain number of examples is available in memory
-        if len(self.replay_memory) < MIN_REPLAY_MEMORY_SIZE:
+        if len(self.init_replay_memory) < MIN_REPLAY_MEMORY_SIZE:
             return
         
+        total_mem = list(self.init_replay_memory)
+        total_mem.extend(self.late_replay_memory)
         # Get a minibatch of random samples from memory
-        minibatch = random.sample(self.replay_memory, MINIBATCH_SIZE)
+        minibatch = random.sample(total_mem, MINIBATCH_SIZE)
 
         # Get current states for minibatch and then query the NN for Q values
         current_states = np.array([transition[0] for transition in minibatch])
