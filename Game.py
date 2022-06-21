@@ -172,6 +172,7 @@ class Game:
                     return
 
             self.update_game(user_input=user_input, moves=2)
+            pygame.display.update()
 
 
     def play_auto(self):
