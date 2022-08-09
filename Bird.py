@@ -9,7 +9,7 @@ class Bird(Obstacle):
     def __init__(self, image: List[pygame.Surface]) -> None:
         self.type = 0
         super().__init__(image, self.type)
-        self.rect.y = random.randint(120, 320)
+        self.rect.y = 120
         self.index = 0
     
     def draw(self, SCREEN: pygame.Surface):
