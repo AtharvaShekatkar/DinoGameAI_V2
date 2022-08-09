@@ -28,9 +28,9 @@ class DQNAgent:
     
     def create_model(self):
         model = tf.keras.models.Sequential()
-        model.add(tf.keras.layers.Input(shape=(5,)))
+        model.add(tf.keras.layers.Input(shape=(7,)))
         # model.add(tf.keras.layers.Dropout(0.2))
-        # model.add(tf.keras.layers.Dense(4, activation='relu'))
+        model.add(tf.keras.layers.Dense(4, activation='relu'))
         # model.add(tf.keras.layers.Dropout(0.2))
         model.add(tf.keras.layers.Dense(3))
 

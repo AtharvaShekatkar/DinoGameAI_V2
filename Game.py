@@ -82,6 +82,8 @@ class Game:
         state = []
         state.append(self.dino.dino_rect.y / self.dino.Y_DUCK_POS + 10) 
         pos_a = (self.dino.dino_rect.x, self.dino.dino_rect.y)
+        bird = 0
+        cactus = 0
         if len(self.obstacles) == 0:
             dist = self.get_dist(pos_a, tuple([SCREEN_WIDTH + 10, self.dino.Y_POS])) / math.sqrt(SCREEN_HEIGHT**2 + SCREEN_WIDTH**2)
             obs_height = 0
@@ -90,12 +92,18 @@ class Game:
             dist = self.get_dist(pos_a, (self.obstacles[0].rect.midtop)) / math.sqrt(SCREEN_HEIGHT**2 + SCREEN_WIDTH**2)
             obs_height = self.obstacles[0].rect.midtop[1] / self.dino.Y_DUCK_POS
             obj_width = self.obstacles[0].rect.width / SMALL_CACTUS[2].get_rect().width
+            if self.obstacles[0].__class__ == SmallCactus(SMALL_CACTUS).__class__ or \
+                self.obstacles[0].__class__ == LargeCactus(LARGE_CACTUS).__class__:
+                cactus = 1
+            else:
+                bird = 1
         
         state.append(dist)
         state.append(obs_height)
         state.append(self.game_speed / 24)
         state.append(obj_width)
-        
+        state.append(cactus)
+        state.append(bird)
         
         return state
 
