@@ -151,7 +151,7 @@ class Game:
 
         self.update_score() 
 
-        self.clock.tick(60)
+        self.clock.tick(30)
 
         # pygame.display.update()
 
@@ -258,7 +258,7 @@ class Game:
 
                 step += 1
 
-                self.clock.tick(60)
+                # self.clock.tick(60)
 
                 # print(current_state)
 
