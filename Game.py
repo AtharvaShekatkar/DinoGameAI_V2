@@ -128,12 +128,12 @@ class Game:
         # elif cactus_prob == 1:
         #     self.obstacles.append(LargeCactus(LARGE_CACTUS))
 
-        obstacle_prob = random.randint(0, 10)
+        obstacle_prob = random.randint(0, 50)
         if obstacle_prob == 0:
             self.obstacles.append(SmallCactus(SMALL_CACTUS))
         elif obstacle_prob == 1:
             self.obstacles.append(LargeCactus(LARGE_CACTUS))
-        elif obstacle_prob == 2 and self.points > 200:
+        elif obstacle_prob == 2 and self.points > 300:
             self.obstacles.append(Bird(BIRD))
     
     def update_game(self, moves, user_input=None):
